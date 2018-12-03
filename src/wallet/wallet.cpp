@@ -262,18 +262,14 @@ void CWallet::AvailableCoinsForStaking(vector<COutput>& vCoins, unsigned int nSp
             if (nDepth < 1)
                 continue;
 
-            for (unsigned int i = 0; i < pcoin->vout.size(); i++) {
-//                cout << !(IsSpent(wtxid,i);
-//                cout << IsMine(pcoin->vout[i]);
-//                cout << (pcoin->vout[i].nValue >= nMinimumInputValue);
+            for (unsigned int i = 0; i < pcoin->vout.size(); i++)
                 if (!(IsSpent(wtxid,i)) && IsMine(pcoin->vout[i]) && pcoin->vout[i].nValue >= nMinimumInputValue){
                     vCoins.push_back(COutput(pcoin, i, nDepth, true,
-                                                ((IsMine(pcoin->vout[i]) & (ISMINE_SPENDABLE)) != ISMINE_NO &&
-                                                !pcoin->vout[i].scriptPubKey.IsColdStaking()) ||
-                                                ((IsMine(pcoin->vout[i]) & (ISMINE_STAKABLE)) != ISMINE_NO &&
-                                                IsColdStakingEnabled(pindexBestHeader, Params().GetConsensus()))));
+                                            ((IsMine(pcoin->vout[i]) & (ISMINE_SPENDABLE)) != ISMINE_NO &&
+                                            !pcoin->vout[i].scriptPubKey.IsColdStaking()) ||
+                                            ((IsMine(pcoin->vout[i]) & (ISMINE_STAKABLE)) != ISMINE_NO &&
+                                            IsColdStakingEnabled(pindexBestHeader, Params().GetConsensus()))));
                 }
-            }
         }
     }
 }
