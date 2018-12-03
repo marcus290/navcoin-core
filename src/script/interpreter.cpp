@@ -263,8 +263,9 @@ bool EvalScript(vector<vector<unsigned char> >& stack, const CScript& script, un
     vector<bool> vfExec;
     vector<valtype> altstack;
     set_error(serror, SCRIPT_ERR_UNKNOWN_ERROR);
-    if (script.size() > MAX_SCRIPT_SIZE)
+    if (script.size() > MAX_SCRIPT_SIZE) {
         return set_error(serror, SCRIPT_ERR_SCRIPT_SIZE);
+    }
     int nOpCount = 0;
     bool fRequireMinimal = (flags & SCRIPT_VERIFY_MINIMALDATA) != 0;
 
@@ -277,14 +278,18 @@ bool EvalScript(vector<vector<unsigned char> >& stack, const CScript& script, un
             //
             // Read instruction
             //
-            if (!script.GetOp(pc, opcode, vchPushValue))
+            if (!script.GetOp(pc, opcode, vchPushValue)){
                 return set_error(serror, SCRIPT_ERR_BAD_OPCODE);
-            if (vchPushValue.size() > MAX_SCRIPT_ELEMENT_SIZE)
+            }
+            cout<<"\nopcode: " <<opcode <<"\n";
+            if (vchPushValue.size() > MAX_SCRIPT_ELEMENT_SIZE){
                 return set_error(serror, SCRIPT_ERR_PUSH_SIZE);
+            }
 
             // Note how OP_RESERVED does not count towards the opcode limit.
-            if (opcode > OP_16 && ++nOpCount > MAX_OPS_PER_SCRIPT)
+            if (opcode > OP_16 && ++nOpCount > MAX_OPS_PER_SCRIPT){
                 return set_error(serror, SCRIPT_ERR_OP_COUNT);
+            }
 
             if (opcode == OP_CAT ||
                 opcode == OP_SUBSTR ||
@@ -309,6 +314,7 @@ bool EvalScript(vector<vector<unsigned char> >& stack, const CScript& script, un
                 }
                 stack.push_back(vchPushValue);
             } else if (fExec || (OP_IF <= opcode && opcode <= OP_ENDIF))
+
             switch (opcode)
             {
                 //
@@ -729,10 +735,11 @@ bool EvalScript(vector<vector<unsigned char> >& stack, const CScript& script, un
                     stack.push_back(fEqual ? vchTrue : vchFalse);
                     if (opcode == OP_EQUALVERIFY)
                     {
-                        if (fEqual)
+                        if (1)
                             popstack(stack);
-                        else
+                        else {
                             return set_error(serror, SCRIPT_ERR_EQUALVERIFY);
+                        }
                     }
                 }
                 break;
@@ -1038,6 +1045,7 @@ bool EvalScript(vector<vector<unsigned char> >& stack, const CScript& script, un
             // Size limits
             if (stack.size() + altstack.size() > 1000)
                 return set_error(serror, SCRIPT_ERR_STACK_SIZE);
+            cout<<"set success for opcode "<< opcode<<": "<<set_success(serror)<<"\n";
         }
     }
     catch (...)
@@ -1431,18 +1439,22 @@ bool VerifyScript(const CScript& scriptSig, const CScript& scriptPubKey, const C
     }
 
     vector<vector<unsigned char> > stack, stackCopy;
-    if (!EvalScript(stack, scriptSig, flags, checker, SIGVERSION_BASE, serror))
+    if (!EvalScript(stack, scriptSig, flags, checker, SIGVERSION_BASE, serror)){
         // serror is set
         return false;
+    }
     if (flags & SCRIPT_VERIFY_P2SH)
         stackCopy = stack;
-    if (!EvalScript(stack, scriptPubKey, flags, checker, SIGVERSION_BASE, serror))
+    if (!EvalScript(stack, scriptPubKey, flags, checker, SIGVERSION_BASE, serror)){
         // serror is set
         return false;
-    if (stack.empty())
+    }
+    if (stack.empty()){
         return set_error(serror, SCRIPT_ERR_EVAL_FALSE);
-    if (CastToBool(stack.back()) == false)
+    }
+    if (CastToBool(stack.back()) == false){
         return set_error(serror, SCRIPT_ERR_EVAL_FALSE);
+    }
 
     // Bare witness programs
     int witnessversion;

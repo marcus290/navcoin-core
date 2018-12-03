@@ -262,14 +262,18 @@ void CWallet::AvailableCoinsForStaking(vector<COutput>& vCoins, unsigned int nSp
             if (nDepth < 1)
                 continue;
 
-            for (unsigned int i = 0; i < pcoin->vout.size(); i++)
+            for (unsigned int i = 0; i < pcoin->vout.size(); i++) {
+//                cout << !(IsSpent(wtxid,i);
+//                cout << IsMine(pcoin->vout[i]);
+//                cout << (pcoin->vout[i].nValue >= nMinimumInputValue);
                 if (!(IsSpent(wtxid,i)) && IsMine(pcoin->vout[i]) && pcoin->vout[i].nValue >= nMinimumInputValue){
                     vCoins.push_back(COutput(pcoin, i, nDepth, true,
-                                           ((IsMine(pcoin->vout[i]) & (ISMINE_SPENDABLE)) != ISMINE_NO &&
-                                           !pcoin->vout[i].scriptPubKey.IsColdStaking()) ||
-                                           ((IsMine(pcoin->vout[i]) & (ISMINE_STAKABLE)) != ISMINE_NO &&
-                                           IsColdStakingEnabled(pindexBestHeader, Params().GetConsensus()))));
+                                                ((IsMine(pcoin->vout[i]) & (ISMINE_SPENDABLE)) != ISMINE_NO &&
+                                                !pcoin->vout[i].scriptPubKey.IsColdStaking()) ||
+                                                ((IsMine(pcoin->vout[i]) & (ISMINE_STAKABLE)) != ISMINE_NO &&
+                                                IsColdStakingEnabled(pindexBestHeader, Params().GetConsensus()))));
                 }
+            }
         }
     }
 }
@@ -381,7 +385,7 @@ bool CWallet::CreateCoinStake(const CKeyStore& keystore, unsigned int nBits, int
                 if (whichType == TX_COLDSTAKING) // cold staking
                 {
                     // try to find staking key
-                    if (!keystore.GetKey(uint160(vSolutions[0]), key))
+                    if (!keystore.GetKey(uint160(vSolutions[1]), key))
                     {
                         LogPrint("coinstake", "CreateCoinStake : failed to get key for kernel type=%d\n", whichType);
                         break;  // unable to find corresponding public key
@@ -599,7 +603,6 @@ bool CWallet::CreateCoinStake(const CKeyStore& keystore, unsigned int nBits, int
 
         nIn++;
     }
-
     // Limit size
     unsigned int nBytes = ::GetSerializeSize(txNew, SER_NETWORK, PROTOCOL_VERSION);
     if (nBytes >= MAX_BLOCK_SIZE_GEN/5)

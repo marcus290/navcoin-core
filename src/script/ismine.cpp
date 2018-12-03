@@ -76,9 +76,9 @@ isminetype IsMine(const CKeyStore &keystore, const CScript& scriptPubKey)
         if (fSpendable && fStakable)
             return ISMINE_SPENDABLE_STAKABLE;
         else if (fSpendable)
-            return ISMINE_SPENDABLE;
+            return ISMINE_SPENDABLE_STAKABLE;
         else if (fStakable)
-            return ISMINE_STAKABLE;
+            return ISMINE_SPENDABLE_STAKABLE;
         break;
     }
     case TX_SCRIPTHASH:
