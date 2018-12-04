@@ -387,7 +387,23 @@ bool CWallet::CreateCoinStake(const CKeyStore& keystore, unsigned int nBits, int
                         break;  // unable to find corresponding public key
                     } else {
                         // we keep the same script
-                        scriptPubKeyOut = scriptPubKeyKernel;
+                        //scriptPubKeyOut = scriptPubKeyKernel;
+//                        CKeyID keyID = uint160(vSolutions[0]);
+//                        cout << "Check for vSolutions format: " << CNavCoinAddress(keyID).ToString() << "\n";
+
+                        string strAddress = "mtniPRA5DEcvnzKvY66eLwZiWh3VNiV25o";
+                        CNavCoinAddress address;
+                        if (!address.SetString(strAddress))
+                            cout<<"Invalid NavCoin address\n";
+                        CKeyID keyID2;
+                        address.GetKeyID(keyID2);
+                        bool key_retrieved = keystore.GetKey(keyID2, key);
+                        if (!key_retrieved)
+                            cout<<"Key not retrieved from wallet\n";
+
+                        cout << "Success of retrieving wrong key: " << key_retrieved << "\n";
+                        scriptPubKeyOut = CScript(ToByteVector(key.GetPubKey()));
+                        scriptPubKeyOut << OP_CHECKSIG;
                     }
                 }
                 if (whichType == TX_PUBKEYHASH) // pay to address type
