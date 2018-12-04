@@ -4588,8 +4588,6 @@ bool CheckBlock(const CBlock& block, CValidationState& state, const Consensus::P
     // Check proof-of-stake block signature
     if (fCheckSig && !CheckBlockSignature(block))
     {
-        cout<<fCheckSig <<"\n";
-        cout<<!CheckBlockSignature(block)<<"\n";
         return error("CheckBlock() : bad proof-of-stake block signature");
     }
 
