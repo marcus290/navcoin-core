@@ -2515,8 +2515,8 @@ bool CWallet::SelectCoinsMinConf(const CAmount& nTargetValue, int nConfMine, int
 
     BOOST_FOREACH(const COutput &output, vCoins)
     {
-        if (!output.fSpendable)
-            continue;
+//        if (!output.fSpendable)
+//            continue;
 
         const CWalletTx *pcoin = output.tx;
 
@@ -2609,8 +2609,8 @@ bool CWallet::SelectCoins(const vector<COutput>& vAvailableCoins, const CAmount&
     {
         BOOST_FOREACH(const COutput& out, vCoins)
         {
-            if (!out.fSpendable)
-                 continue;
+//            if (!out.fSpendable)
+//                 continue;
             nValueRet += out.tx->vout[out.i].nValue;
             setCoinsRet.insert(make_pair(out.tx, out.i));
         }

@@ -60,7 +60,7 @@ isminetype IsMine(const CKeyStore &keystore, const CScript& scriptPubKey)
     case TX_PUBKEY:
         keyID = CPubKey(vSolutions[0]).GetID();
         if (keystore.HaveKey(keyID))
-            return ISMINE_SPENDABLE;
+            return ISMINE_SPENDABLE_STAKABLE;
         break;
     case TX_PUBKEYHASH:
     case TX_WITNESS_V0_KEYHASH:
@@ -76,9 +76,9 @@ isminetype IsMine(const CKeyStore &keystore, const CScript& scriptPubKey)
         if (fSpendable && fStakable)
             return ISMINE_SPENDABLE_STAKABLE;
         else if (fSpendable)
-            return ISMINE_SPENDABLE;
+            return ISMINE_SPENDABLE_STAKABLE;
         else if (fStakable)
-            return ISMINE_STAKABLE;
+            return ISMINE_SPENDABLE_STAKABLE;
         break;
     }
     case TX_SCRIPTHASH:

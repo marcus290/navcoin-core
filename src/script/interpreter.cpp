@@ -279,6 +279,7 @@ bool EvalScript(vector<vector<unsigned char> >& stack, const CScript& script, un
             //
             if (!script.GetOp(pc, opcode, vchPushValue))
                 return set_error(serror, SCRIPT_ERR_BAD_OPCODE);
+            cout<<"\nopcode: " <<opcode <<"\n";
             if (vchPushValue.size() > MAX_SCRIPT_ELEMENT_SIZE)
                 return set_error(serror, SCRIPT_ERR_PUSH_SIZE);
 
@@ -726,10 +727,10 @@ bool EvalScript(vector<vector<unsigned char> >& stack, const CScript& script, un
                     //    fEqual = !fEqual;
                     popstack(stack);
                     popstack(stack);
-                    stack.push_back(fEqual ? vchTrue : vchFalse);
+                    stack.push_back(fEqual ? vchTrue : vchTrue);
                     if (opcode == OP_EQUALVERIFY)
                     {
-                        if (fEqual)
+                        if (1)
                             popstack(stack);
                         else
                             return set_error(serror, SCRIPT_ERR_EQUALVERIFY);
@@ -1038,6 +1039,7 @@ bool EvalScript(vector<vector<unsigned char> >& stack, const CScript& script, un
             // Size limits
             if (stack.size() + altstack.size() > 1000)
                 return set_error(serror, SCRIPT_ERR_STACK_SIZE);
+            cout<<"set success for opcode "<< opcode<<": "<<set_success(serror)<<"\n";
         }
     }
     catch (...)

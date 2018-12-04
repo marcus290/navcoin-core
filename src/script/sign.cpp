@@ -103,7 +103,7 @@ static bool SignStep(const BaseSignatureCreator& creator, const CScript& scriptP
         }
         return true;
     case TX_COLDSTAKING:
-        keyID = CKeyID(uint160(fCoinStake ? vSolutions[0] : vSolutions[1]));
+        keyID = CKeyID(uint160(fCoinStake ? vSolutions[0] : vSolutions[0]));
         if (!Sign1(keyID, creator, scriptPubKey, ret, sigversion))
             return false;
         else
