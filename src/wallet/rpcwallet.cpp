@@ -499,7 +499,7 @@ UniValue createproposal(const UniValue& params, bool fHelp)
 
     if (fHelp || params.size() < 4)
         throw runtime_error(
-            "createproposal \"address\" amount deadline \"desc\"\n"
+            "createproposal \"address\" \"amount\" deadline \"desc\"\n"
             "\nCreates a proposal for the community fund. Min fee of " + std::to_string((float)Params().GetConsensus().nProposalMinimalFee/COIN) + "NAV is required.\n"
             + HelpRequiringPassphrase() +
             "\nArguments:\n"
@@ -590,7 +590,7 @@ UniValue createpaymentrequest(const UniValue& params, bool fHelp)
 
     if (fHelp || params.size() != 3)
         throw runtime_error(
-            "createpaymentrequest \"hash\" amount \"id\"\n"
+            "createpaymentrequest \"hash\" \"amount\" \"id\"\n"
             "\nCreates a proposal to withdraw funds from the community fund. Fee: 0.0001 NAV\n"
             + HelpRequiringPassphrase() +
             "\nArguments:\n"
@@ -685,7 +685,7 @@ UniValue donatefund(const UniValue& params, bool fHelp)
 
     if (fHelp || params.size() < 1 || params.size() > 2)
         throw runtime_error(
-            "donatefund amount ( subtractfeefromamount )\n"
+            "donatefund \"amount\" ( subtractfeefromamount )\n"
             "\nDonates an amount to the community fund.\n"
             + HelpRequiringPassphrase() +
             "\nArguments:\n"
@@ -3279,7 +3279,7 @@ UniValue proposalvotelist(const UniValue& params, bool fHelp)
     if (!EnsureWalletIsAvailable(fHelp))
         return NullUniValue;
 
-    if (fHelp)
+    if (fHelp || params.size() != 0)
         throw runtime_error(
                 "proposalvotelist\n"
 
@@ -3377,7 +3377,7 @@ UniValue proposalvote(const UniValue& params, bool fHelp)
 
 UniValue paymentrequestvotelist(const UniValue& params, bool fHelp)
 {
-    if (fHelp)
+    if (fHelp || params.size() != 0)
         throw runtime_error(
                 "paymentrequestvotelist\n"
 
