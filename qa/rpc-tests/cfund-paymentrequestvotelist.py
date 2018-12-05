@@ -84,7 +84,7 @@ class CommunityFundPaymentRequestVoteListTest(NavCoinTestFramework):
         preq0_d = self.nodes[0].createpaymentrequest(proposalid0, 1, "preq0_d")["hash"]
         slow_gen(self.nodes[0], 1)
 
-        # Check the new proposal has been added to "null" of proposal vote list
+        # Check the new payment request has been added to "null" of payment request vote list
         assert(len(self.nodes[0].paymentrequestvotelist()["null"]) == 1)
         assert("hash=" + preq0_d in self.nodes[0].paymentrequestvotelist()["null"][0])
 
