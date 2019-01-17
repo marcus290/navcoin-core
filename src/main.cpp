@@ -3842,6 +3842,17 @@ bool static ConnectTip(CValidationState& state, const CChainParams& chainparams,
     // Update chainActive & related variables.
     UpdateTip(pindexNew, chainparams);
     CountVotes(state, pindexNew, false);
+
+    std::string cfundLog = "";
+    std::vector<CFund::CProposal> vec;
+    if(pblocktree->GetProposalIndex(vec))
+    {
+        BOOST_FOREACH(const CFund::CProposal& proposal, vec) {
+            cfundLog.append(proposal.ToString());
+        }
+    }
+    LogPrint("cfund", "  - Cfund state: %s\n", (cfundLog.length() ? cfundLog : "none"));
+
     // Tell wallet about transactions that went from mempool
     // to conflicted:
     BOOST_FOREACH(const CTransaction &tx, txConflicted) {
