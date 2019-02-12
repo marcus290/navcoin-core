@@ -1855,7 +1855,11 @@ void GetReceived(const COutputEntry& r, const CWalletTx& wtx, const string& strA
         {
             entry.push_back(Pair("category", "receive"));
         }
-        entry.push_back(Pair("amount", ValueFromAmount(r.amount)));
+        if (!wtx.IsCoinStake())
+            entry.push_back(Pair("amount", ValueFromAmount(r.amount)));
+        else {
+            entry.push_back(Pair("amount", ValueFromAmount(-nFee)));
+        }
         entry.push_back(Pair("canStake", (::IsMine(*pwalletMain, r.destination) & ISMINE_STAKABLE ||
                                           (::IsMine(*pwalletMain, r.destination) & ISMINE_SPENDABLE &&
                                            !CNavCoinAddress(r.destination).IsColdStakingAddress(Params()))) ? true : false));
@@ -1922,8 +1926,11 @@ void ListTransactions(const CWalletTx& wtx, const string& strAccount, int nMinDe
         }
         else
         {
-            GetReceived(listReceived.back(), wtx, strAccount, fLong, ret, nFee, fAllAccounts, involvesWatchonly);
-            // only one coinstake output
+            // only get the coinstake reward output
+            if (wtx.GetValueOutCFund() == 0)
+                GetReceived(listReceived.back(), wtx, strAccount, fLong, ret, nFee, fAllAccounts, involvesWatchonly);
+            else
+                GetReceived(*std::prev(listReceived.end(),1), wtx, strAccount, fLong, ret, nFee, fAllAccounts, involvesWatchonly);
         }
     }
 }
