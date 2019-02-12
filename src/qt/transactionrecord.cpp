@@ -55,6 +55,11 @@ QList<TransactionRecord> TransactionRecord::decomposeTransaction(const CWallet *
         // Credit
         //
         unsigned int i = 0;
+        unsigned int rewardIdx = 0;
+        if (wtx.IsCoinStake())
+            // If coinstake has no cfund contribution, get details of last vout or else use second to last
+            rewardIdx = wtx.vout.size() - (wtx.GetValueOutCFund() == 0 ? 1 : 2);
+
         BOOST_FOREACH(const CTxOut& txout, wtx.vout)
         {
             isminetype mine = wallet->IsMine(txout);
@@ -88,10 +93,10 @@ QList<TransactionRecord> TransactionRecord::decomposeTransaction(const CWallet *
                 {
                     // Generated (proof-of-stake)
 
-                    if (i != wtx.vout.size() - 1)
+                    if (i != rewardIdx)
                     {
                         i++;
-                        continue; // only append details of the last coinstake output
+                        continue; // only append details of the address with reward output
                     }
 
                     sub.type = TransactionRecord::Staked;
