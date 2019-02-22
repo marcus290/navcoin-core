@@ -167,6 +167,7 @@ testScripts = [
     'staticr-staking-amount.py',
     'hardfork-451.py',
     'staticr-tx-send.py',
+    'mnemonic.py',
 ]
 #if ENABLE_ZMQ:
 #    testScripts.append('zmq_test.py')
